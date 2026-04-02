@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import BudgetsView from '@/components/views/BudgetsView.tsx';
+---
+
+<Layout title="Budgets">
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Budgets & Analytics</h1>
+      <p class="text-base text-gray-500 mt-1">Visualize your spending patterns and structural analytics.</p>
+    </div>
+    <BudgetsView client:load />
+  </div>
+</Layout>

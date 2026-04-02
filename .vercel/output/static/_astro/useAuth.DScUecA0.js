@@ -1,0 +1,1 @@
+import{r as o}from"./index.CCI6ce_L.js";function s(){const[n,t]=o.useState(null);return o.useEffect(()=>{const e=localStorage.getItem("ledger_token");t(!!e)},[]),{isAuthenticated:n,login:e=>{localStorage.setItem("ledger_token",e),t(!0),window.location.href="/dashboard"},logout:()=>{localStorage.removeItem("ledger_token"),t(!1),window.location.href="/login"}}}export{s as u};

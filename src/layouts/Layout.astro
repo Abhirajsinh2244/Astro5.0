@@ -1,0 +1,38 @@
+---
+import '@/styles/global.css';
+import TopNav from '@/components/layout/TopNav.tsx';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | LedgerPro</title>
+    
+    <script is:inline>
+      // Client-side execution blocks unauthorized access before hydration
+      const publicPaths = ['/login', '/register', '/'];
+      const token = localStorage.getItem('ledger_token');
+      const isPublic = publicPaths.includes(window.location.pathname);
+      
+      if (!token && !isPublic) {
+        window.location.href = '/login';
+      } else if (token && (window.location.pathname === '/login' || window.location.pathname === '/register' || window.location.pathname === '/')) {
+        window.location.href = '/dashboard';
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-gray-50/50 font-sans text-gray-800 flex flex-col antialiased selection:bg-emerald-100 selection:text-emerald-900">
+    <TopNav client:load />
+    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <slot />
+    </main>
+  </body>
+</html>
