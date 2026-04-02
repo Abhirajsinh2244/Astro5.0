@@ -51,6 +51,7 @@ class ApiResponse {
 
 const getAllTransactions = async (c) => {
   const payload = c.get("jwtPayload");
+  console.log("Fetching transactions for user:", payload.sub);
   const { data, error } = await supabase.from("transactions").select("*").eq("user_id", payload.sub).order("date", { ascending: false });
   if (error) {
     console.error("DB Error:", error);
@@ -107,8 +108,10 @@ const registerUser = async (c) => {
   return c.json({ success: true, token, user: { id: userId, email } }, 201);
 };
 const loginUser = async (c) => {
+  console.log("req", await c.req.json());
   const { email, password } = await c.req.json();
   const { data: user, error } = await supabase.from("users").select("*").eq("email", email).single();
+  console.log("User", user);
   if (error || !user) {
     return c.json(new ApiResponse(false, void 0, "Invalid credentials"), 401);
   }

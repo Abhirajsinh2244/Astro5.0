@@ -1,8 +1,9 @@
-import { c as createComponent } from './astro-component_CHfO9wO1.mjs';
+import { c as createComponent } from './astro-component_CgDN4OMu.mjs';
 import 'piccolore';
-import { r as renderTemplate, n as renderSlot, l as renderComponent, o as renderHead } from './entrypoint_DWawJIkV.mjs';
+import { r as renderTemplate, n as renderSlot, l as renderComponent, o as renderHead } from './entrypoint_WcFVgOOV.mjs';
 import { jsx, jsxs } from 'react/jsx-runtime';
 import { useState, useEffect } from 'react';
+import { hc } from 'hono/client';
 
 function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -65,20 +66,15 @@ const getBaseUrl = () => {
   if (typeof window !== "undefined") return window.location.origin;
   return "http://localhost:4321";
 };
-const apiFetch = async (endpoint, options = {}) => {
-  const baseUrl = getBaseUrl();
-  const url = `${baseUrl}${endpoint}`;
-  const headers = new Headers(options.headers);
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("ledger_token");
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+const apiClient = hc(getBaseUrl(), {
+  headers: () => {
+    const headers = {};
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("ledger_token");
+      if (token) headers.Authorization = `Bearer ${token}`;
     }
+    return headers;
   }
-  if (options.body && !headers.has("Content-Type")) {
-    headers.set("Content-Type", "application/json");
-  }
-  return fetch(url, { ...options, headers });
-};
+});
 
-export { $$Layout as $, apiFetch as a, useAuth as u };
+export { $$Layout as $, apiClient as a, useAuth as u };

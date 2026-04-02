@@ -1,13 +1,13 @@
-import { c as createComponent } from './astro-component_CHfO9wO1.mjs';
+import { c as createComponent } from './astro-component_CgDN4OMu.mjs';
 import 'piccolore';
-import { l as renderComponent, r as renderTemplate, m as maybeRenderHead } from './entrypoint_DWawJIkV.mjs';
-import { $ as $$Layout } from './api_BmEuRN-b.mjs';
+import { l as renderComponent, r as renderTemplate, m as maybeRenderHead } from './entrypoint_WcFVgOOV.mjs';
+import { $ as $$Layout } from './api_DfTFoTW3.mjs';
 import { jsxs, jsx } from 'react/jsx-runtime';
 import { useMemo, useEffect } from 'react';
-import { C as CategoryReport } from './CategoryReport_CSnXqgd1.mjs';
+import { C as CategoryReport } from './CategoryReport_C-cjuQ_E.mjs';
 import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, Area } from 'recharts';
 import { subMonths, format, parseISO } from 'date-fns';
-import { u as useTransactions } from './useTransactions_qJTEYm5w.mjs';
+import { u as useTransactions } from './useTransactions_C0HM4yRH.mjs';
 
 function MonthlyTrends({ transactions }) {
   const chartData = useMemo(() => {

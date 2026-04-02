@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { a as apiFetch } from './api_BmEuRN-b.mjs';
+import { a as apiClient } from './api_DfTFoTW3.mjs';
 
 const CATEGORY_MAP = {
   "Food & Drink": "Food & Drink",
@@ -25,33 +25,33 @@ function useTransactions() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await apiFetch("/api/transactions");
+      const response = await apiClient.api.transactions.$get();
       if (handleAuthError(response.status)) return;
+      if (!response.ok) throw new Error(`Server connection failed: ${response.status}`);
       const result = await response.json();
-      if (response.ok && result.success) {
+      if (result.success === true && "data" in result) {
         setData(result.data);
       } else {
         throw new Error(result.error || "Failed to retrieve records");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      const message = err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
   }, []);
   const addTransaction = async (payload) => {
     try {
-      const response = await apiFetch("/api/transactions", {
-        method: "POST",
-        body: JSON.stringify(payload)
-      });
+      const response = await apiClient.api.transactions.$post({ json: payload });
       if (handleAuthError(response.status)) return false;
       const result = await response.json();
-      if (response.ok && result.success) {
+      if (result.success === true) {
         setData((prev) => [result.data, ...prev]);
         return true;
+      } else {
+        throw new Error(result.error || "Validation failed");
       }
-      throw new Error(result.error || "Validation failed");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add transaction");
       return false;
@@ -59,17 +59,15 @@ function useTransactions() {
   };
   const editTransaction = async (id, payload) => {
     try {
-      const response = await apiFetch(`/api/transactions/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(payload)
-      });
+      const response = await apiClient.api.transactions[":id"].$put({ param: { id }, json: payload });
       if (handleAuthError(response.status)) return false;
       const result = await response.json();
-      if (response.ok && result.success) {
+      if (result.success === true) {
         setData((prev) => prev.map((t) => t.id === id ? result.data : t));
         return true;
+      } else {
+        throw new Error(result.error || "Update failed");
       }
-      throw new Error(result.error || "Update failed");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update transaction");
       return false;
@@ -77,16 +75,15 @@ function useTransactions() {
   };
   const deleteTransaction = async (id) => {
     try {
-      const response = await apiFetch(`/api/transactions/${id}`, {
-        method: "DELETE"
-      });
+      const response = await apiClient.api.transactions[":id"].$delete({ param: { id } });
       if (handleAuthError(response.status)) return false;
       const result = await response.json();
-      if (response.ok && result.success) {
+      if (result.success === true) {
         setData((prev) => prev.filter((t) => t.id !== id));
         return true;
+      } else {
+        throw new Error(result.error || "Failed to delete record");
       }
-      throw new Error(result.error || "Failed to delete record");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Delete operation failed");
       return false;

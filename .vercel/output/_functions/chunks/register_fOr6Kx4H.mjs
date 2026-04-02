@@ -1,7 +1,7 @@
-import { c as createComponent } from './astro-component_CHfO9wO1.mjs';
+import { c as createComponent } from './astro-component_CgDN4OMu.mjs';
 import 'piccolore';
-import { l as renderComponent, r as renderTemplate } from './entrypoint_DWawJIkV.mjs';
-import { u as useAuth, a as apiFetch, $ as $$Layout } from './api_BmEuRN-b.mjs';
+import { l as renderComponent, r as renderTemplate } from './entrypoint_WcFVgOOV.mjs';
+import { u as useAuth, a as apiClient, $ as $$Layout } from './api_DfTFoTW3.mjs';
 import { jsx, jsxs } from 'react/jsx-runtime';
 import { useState } from 'react';
 import { C as Card, b as CardHeader, c as CardTitle, d as CardDescription, a as CardContent } from './card_ec129ZCw.mjs';
@@ -18,15 +18,12 @@ function RegisterView() {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await apiFetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password })
-      });
+      const res = await apiClient.api.auth.register.$post({ json: { email, password } });
       const data = await res.json();
-      if (res.ok && data.success) {
+      if (data.success && "token" in data) {
         login(data.token);
       } else {
-        setError(data.error || "Authentication rejected.");
+        setError(data.error || "Failed to provision workspace.");
       }
     } catch (err) {
       setError("A secure connection could not be established.");
@@ -71,7 +68,7 @@ function RegisterView() {
               value: password,
               onChange: (e) => setPassword(e.target.value),
               className: "h-10 text-sm font-medium",
-              placeholder: "Password"
+              placeholder: "Enter password"
             }
           )
         ] })
